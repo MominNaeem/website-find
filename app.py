@@ -51,69 +51,82 @@ if _mockup_id:
     st.stop()
 
 # ---------------- auth gate ---------------- #
-AUTH_CONFIG = Path(__file__).parent / "auth_config.yaml"
-_has_auth = AUTH_CONFIG.exists()
-if not _has_auth:
-    # Streamlit Cloud: try loading auth config from secrets
+
+def _load_credentials_from_supabase() -> dict:
+    """Load user credentials from Supabase users table."""
+    resp = db._sb().table("users").select("*").execute()
+    usernames = {}
+    for row in resp.data:
+        usernames[row["username"]] = {
+            "email": row.get("email", ""),
+            "first_name": row.get("first_name", ""),
+            "last_name": row.get("last_name", ""),
+            "password": row["password"],
+        }
+    return {"usernames": usernames}
+
+
+def _get_cookie_config() -> dict:
+    """Get cookie config from yaml, secrets, or defaults."""
     try:
         import json as _json
-        # Deep-convert st.secrets (immutable) to plain dicts
-        _cfg = _json.loads(_json.dumps(dict(st.secrets["auth"]),
-                                        default=lambda o: dict(o) if hasattr(o, "items") else o))
-        _has_auth = True
+        auth_secrets = _json.loads(_json.dumps(dict(st.secrets["auth"]),
+                                   default=lambda o: dict(o) if hasattr(o, "items") else o))
+        return auth_secrets.get("cookie", {})
     except Exception:
         pass
+    cfg_path = Path(__file__).parent / "auth_config.yaml"
+    if cfg_path.exists():
+        with open(cfg_path) as f:
+            return yaml.load(f, Loader=SafeLoader).get("cookie", {})
+    return {"name": "website_find_auth", "key": "secret", "expiry_days": 30}
 
-if _has_auth:
-    from streamlit_authenticator.utilities.validator import Validator
 
-    class _NoRulesValidator(Validator):
-        def validate_password(self, password):
-            return bool(password)  # accept anything non-empty
+_cookie = _get_cookie_config()
+_credentials = _load_credentials_from_supabase()
 
-    if AUTH_CONFIG.exists():
-        with open(AUTH_CONFIG) as _f:
-            _cfg = yaml.load(_f, Loader=SafeLoader)
-    authenticator = stauth.Authenticate(
-        _cfg["credentials"], _cfg["cookie"]["name"],
-        _cfg["cookie"]["key"], _cfg["cookie"]["expiry_days"],
-        validator=_NoRulesValidator(),
-    )
-    try:
-        authenticator.login(location="main")
-    except Exception as e:
-        st.error(f"Login error: {e}")
-        st.stop()
-    auth_status = st.session_state.get("authentication_status")
-    if auth_status is False:
-        st.error("Username or password is incorrect.")
-        st.stop()
-    if auth_status is None:
-        st.info("🔒 Please log in to continue.")
-        st.stop()
-    # Log this session's authentication (once per browser session)
-    if not st.session_state.get("_logged_login"):
-        from datetime import datetime
-        with open(Path(__file__).parent / "login_events.log", "a") as _lf:
-            _lf.write(f"{datetime.utcnow().isoformat(timespec='seconds')}Z "
-                      f"login user={st.session_state.get('username','?')}\n")
-        st.session_state["_logged_login"] = True
+from streamlit_authenticator.utilities.validator import Validator
 
-    # Authenticated — show logout + password change in sidebar
-    with st.sidebar:
-        authenticator.logout(location="sidebar")
-        st.caption(f"Signed in as **{st.session_state.get('name','?')}**")
-        with st.expander("🔑 Change password"):
-            try:
-                if authenticator.reset_password(
-                    st.session_state["username"], location="main"
-                ):
-                    with open(AUTH_CONFIG, "w") as _wf:
-                        yaml.dump(_cfg, _wf, default_flow_style=False)
-                    st.success("Password updated. Use the new one next time you log in.")
-            except Exception as _e:
-                st.error(str(_e))
-        st.divider()
+class _NoRulesValidator(Validator):
+    def validate_password(self, password):
+        return bool(password)
+
+authenticator = stauth.Authenticate(
+    _credentials, _cookie.get("name", "website_find_auth"),
+    _cookie.get("key", "secret"), _cookie.get("expiry_days", 30),
+    validator=_NoRulesValidator(),
+)
+try:
+    authenticator.login(location="main")
+except Exception as e:
+    st.error(f"Login error: {e}")
+    st.stop()
+auth_status = st.session_state.get("authentication_status")
+if auth_status is False:
+    st.error("Username or password is incorrect.")
+    st.stop()
+if auth_status is None:
+    st.info("🔒 Please log in to continue.")
+    st.stop()
+
+# Authenticated — show logout + password change in sidebar
+with st.sidebar:
+    authenticator.logout(location="sidebar")
+    st.caption(f"Signed in as **{st.session_state.get('name','?')}**")
+    with st.expander("🔑 Change password"):
+        try:
+            if authenticator.reset_password(
+                st.session_state["username"], location="main"
+            ):
+                # Save new password to Supabase
+                new_hash = _credentials["usernames"][st.session_state["username"]]["password"]
+                db._sb().table("users").update({"password": new_hash}).eq(
+                    "username", st.session_state["username"]
+                ).execute()
+                st.success("Password updated permanently.")
+        except Exception as _e:
+            st.error(str(_e))
+    st.divider()
 
 db.init_db()
 
