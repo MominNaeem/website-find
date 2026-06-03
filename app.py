@@ -413,6 +413,7 @@ with tab_leads:
                         address=_address, lead_type=row.lead_type,
                         website_uri=_website or None,
                     )
+                    _mockup_ok = False
                     with st.spinner("Fetching the business's own photos + calling Gemini Pro to design their site..."):
                         try:
                             html = mockup.generate_html(info, place_id=row.place_id)
@@ -420,11 +421,13 @@ with tab_leads:
                                            mockup_html=html,
                                            mockup_generated_at=verify.now_iso())
                             st.toast("Mockup ready — scroll down to preview.", icon="🖼️")
+                            _mockup_ok = True
                         except Exception as err:
                             import traceback
                             st.error(f"Mockup generation failed: {err}")
                             st.code(traceback.format_exc())
-                    st.rerun()
+                    if _mockup_ok:
+                        st.rerun()
 
                 _script = row.outreach_script if isinstance(row.outreach_script, str) else ""
                 if _script:
