@@ -421,7 +421,9 @@ with tab_leads:
                                            mockup_generated_at=verify.now_iso())
                             st.toast("Mockup ready — scroll down to preview.", icon="🖼️")
                         except Exception as err:
+                            import traceback
                             st.error(f"Mockup generation failed: {err}")
+                            st.code(traceback.format_exc())
                     st.rerun()
 
                 _script = row.outreach_script if isinstance(row.outreach_script, str) else ""
