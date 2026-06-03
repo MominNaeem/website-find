@@ -6,9 +6,11 @@ city, rating, AND its actual photos pulled from Google Maps.
 """
 from __future__ import annotations
 
+import json
 import os
 import random
 import re
+import tempfile
 from dataclasses import dataclass
 
 import photos as photos_mod
@@ -36,6 +38,20 @@ _client: genai.Client | None = None
 def _get_client() -> genai.Client:
     global _client
     if _client is None:
+        # Check for service account key in env or Streamlit secrets
+        sa_key = os.environ.get("GOOGLE_SA_KEY", "")
+        if not sa_key:
+            try:
+                import streamlit as st
+                sa_key = st.secrets.get("GOOGLE_SA_KEY", "")
+            except Exception:
+                pass
+        if sa_key:
+            # Write key to temp file for google-genai to pick up
+            tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+            tmp.write(sa_key)
+            tmp.close()
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = tmp.name
         _client = genai.Client(vertexai=True, project=PROJECT, location=LOCATION)
     return _client
 
