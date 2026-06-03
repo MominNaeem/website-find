@@ -108,6 +108,9 @@ PROMPT_TEMPLATE = """You are a senior product designer at a top studio (Linear, 
 - Does EVERY service card have a thumbnail or background image (not just text)?
 - Did you avoid every banned phrase in COPY VOICE?
 - Is your HTML valid? (No <tr> wrapped in <div>, all tags closed, proper table structure if you use one)
+- **BUTTON CONTRAST CHECK**: For EVERY button and link, verify the text color has strong contrast against its background. A white/light outlined button on a dark background MUST have white or light text. A filled button must have contrasting text. Ghost/outline buttons must have visible text color matching the border. NEVER have invisible or low-contrast button text — this is a dealbreaker.
+- **HOVER STATES**: Hover effects must NOT make text disappear. If a button is visible by default, it must remain readable on hover.
+- **RESPONSIVE CHECK**: All text must be readable, no overflow/clipping. Test mentally at 375px, 768px, and 1440px widths.
 - Are you sure this would impress a designer friend, not embarrass you?
 
 Return only HTML starting with <!DOCTYPE html>."""
