@@ -8,6 +8,7 @@ right sections (landscape for hero, varied for services, etc).
 """
 from __future__ import annotations
 
+import base64
 import json
 import os
 from pathlib import Path
@@ -98,8 +99,13 @@ def fetch_and_cache(place_id: str, max_photos: int = 6) -> list[dict]:
         h = p.get("heightPx", 900)
         attribs = p.get("authorAttributions", [])
         attribution = ", ".join(a.get("displayName", "") for a in attribs[:1])
+        # Use placeholder URL for prompt, store base64 for post-processing
+        img_bytes = path.read_bytes()
+        b64 = base64.b64encode(img_bytes).decode("ascii")
+        placeholder = f"https://PLACEHOLDER_IMAGE/{safe}_{i}.jpg"
         out.append({
-            "url": f"{PUBLIC_BASE}/assets/photos/{safe}_{i}.jpg",
+            "url": placeholder,
+            "data_uri": f"data:image/jpeg;base64,{b64}",
             "width": w,
             "height": h,
             "orientation": "landscape" if w >= h else "portrait",
@@ -173,3 +179,12 @@ def to_prompt_block(photos: list[dict]) -> str:
     if attributions:
         lines.append(f"  • Include in footer: 'Photos: {', '.join(attributions[:3])} (via Google Maps + AI mockup)'")
     return "\n".join(lines)
+
+
+def replace_placeholder_urls(html: str, photos: list[dict]) -> str:
+    """Replace placeholder URLs in generated HTML with base64 data URIs."""
+    for p in photos:
+        data_uri = p.get("data_uri")
+        if data_uri and p["url"] in html:
+            html = html.replace(p["url"], data_uri)
+    return html

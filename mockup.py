@@ -170,6 +170,9 @@ def generate_html(lead: LeadInfo, place_id: str | None = None) -> str:
     if business_photos:
         valid = {p["url"] for p in business_photos}
         html = _replace_hallucinated_image_urls(html, valid)
+    # Replace placeholder URLs with base64 data URIs so images work everywhere
+    if business_photos:
+        html = photos_mod.replace_placeholder_urls(html, business_photos)
 
     # Save mockup to a public path so the URL can be shared in DMs / emails.
     if place_id:

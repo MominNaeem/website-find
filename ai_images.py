@@ -5,6 +5,7 @@ Google Maps. Generated images are cached locally so we don't regenerate.
 """
 from __future__ import annotations
 
+import base64
 import os
 from pathlib import Path
 
@@ -127,8 +128,12 @@ def generate_for_slots(
                 print(f"  [ai_images] failed slot={slot}: {e}")
                 continue
         is_hero = slot == "hero"
+        img_bytes = path.read_bytes()
+        b64 = base64.b64encode(img_bytes).decode("ascii")
+        placeholder = f"https://PLACEHOLDER_IMAGE/{path.name}"
         out.append({
-            "url": f"{PUBLIC_BASE}/assets/photos/{path.name}",
+            "url": placeholder,
+            "data_uri": f"data:image/png;base64,{b64}",
             "width":  1600 if is_hero else 1200,
             "height": 900  if is_hero else 900,
             "orientation": "landscape",
