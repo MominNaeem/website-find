@@ -16,3 +16,4 @@ migrate_to_supabase.py
 login_events.log
 *.pdf
 node_modules/
+streamlit_secrets.txt
