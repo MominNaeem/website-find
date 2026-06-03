@@ -15,7 +15,7 @@ from google import genai
 PROJECT  = os.environ.get("VERTEX_PROJECT",  "website-find-1777676850")
 LOCATION = os.environ.get("VERTEX_LOCATION", "us-central1")
 MODEL    = "imagen-3.0-generate-002"
-PUBLIC_BASE = os.environ.get("PUBLIC_BASE", "https://15-156-6-65.sslip.io")
+PUBLIC_BASE = os.environ.get("PUBLIC_BASE", "https://website-find.streamlit.app")
 CACHE    = Path(__file__).parent / "static" / "photos"
 CACHE.mkdir(parents=True, exist_ok=True)
 

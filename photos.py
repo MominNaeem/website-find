@@ -34,7 +34,7 @@ API_KEY = _get_env("GOOGLE_PLACES_API_KEY")
 # Public base URL for serving photos. Must be absolute so downloaded HTML
 # files still load images correctly from EC2 (paths starting with /static/
 # break when the HTML is opened locally).
-PUBLIC_BASE = os.environ.get("PUBLIC_BASE", "https://15-156-6-65.sslip.io")
+PUBLIC_BASE = os.environ.get("PUBLIC_BASE", "https://website-find.streamlit.app")
 PHOTO_CACHE = Path(__file__).parent / "static" / "photos"
 PHOTO_CACHE.mkdir(parents=True, exist_ok=True)
 

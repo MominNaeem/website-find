@@ -199,7 +199,7 @@ def _save_public_mockup(place_id: str, html: str) -> str:
 
 def public_mockup_url(place_id: str) -> str:
     """The publicly accessible URL for a saved mockup (whether or not it exists)."""
-    base = os.environ.get("PUBLIC_BASE", "https://15-156-6-65.sslip.io")
+    base = os.environ.get("PUBLIC_BASE", "https://website-find.streamlit.app")
     safe = place_id.replace("/", "_").replace(":", "_")
     return f"{base}/assets/mockups/{safe}.html"
 
