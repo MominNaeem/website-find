@@ -16,7 +16,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_KEY = os.environ["GOOGLE_PLACES_API_KEY"]
+
+def _get_env(key: str) -> str:
+    val = os.environ.get(key, "")
+    if not val:
+        try:
+            import streamlit as st
+            val = st.secrets.get(key, "")
+        except Exception:
+            pass
+    if not val:
+        raise RuntimeError(f"Missing env var: {key}")
+    return val
+
+
+API_KEY = _get_env("GOOGLE_PLACES_API_KEY")
 PLACES_ENDPOINT  = "https://places.googleapis.com/v1/places:searchText"
 GEOCODE_ENDPOINT = "https://maps.googleapis.com/maps/api/geocode/json"
 

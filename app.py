@@ -33,15 +33,25 @@ st.set_page_config(page_title="website_find", layout="wide", page_icon="🔎")
 
 # ---------------- auth gate ---------------- #
 AUTH_CONFIG = Path(__file__).parent / "auth_config.yaml"
-if AUTH_CONFIG.exists():
+_has_auth = AUTH_CONFIG.exists()
+if not _has_auth:
+    # Streamlit Cloud: try loading auth config from secrets
+    try:
+        _cfg = dict(st.secrets["auth"])
+        _has_auth = True
+    except Exception:
+        pass
+
+if _has_auth:
     from streamlit_authenticator.utilities.validator import Validator
 
     class _NoRulesValidator(Validator):
         def validate_password(self, password):
             return bool(password)  # accept anything non-empty
 
-    with open(AUTH_CONFIG) as _f:
-        _cfg = yaml.load(_f, Loader=SafeLoader)
+    if AUTH_CONFIG.exists():
+        with open(AUTH_CONFIG) as _f:
+            _cfg = yaml.load(_f, Loader=SafeLoader)
     authenticator = stauth.Authenticate(
         _cfg["credentials"], _cfg["cookie"]["name"],
         _cfg["cookie"]["key"], _cfg["cookie"]["expiry_days"],

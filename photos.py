@@ -17,7 +17,19 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-API_KEY = os.environ["GOOGLE_PLACES_API_KEY"]
+
+def _get_env(key: str, default: str = "") -> str:
+    val = os.environ.get(key, "")
+    if not val:
+        try:
+            import streamlit as st
+            val = st.secrets.get(key, "")
+        except Exception:
+            pass
+    return val or default
+
+
+API_KEY = _get_env("GOOGLE_PLACES_API_KEY")
 # Public base URL for serving photos. Must be absolute so downloaded HTML
 # files still load images correctly from EC2 (paths starting with /static/
 # break when the HTML is opened locally).
