@@ -119,12 +119,6 @@ def fetch_with_ai_fallback(
     if len(real) >= target_count:
         return real[:target_count]
 
-    # Skip AI image generation on Streamlit Cloud (no GCE metadata,
-    # Imagen calls timeout). The mockup prompt handles missing photos
-    # gracefully with CSS gradients.
-    if os.environ.get("STREAMLIT_SHARING_MODE") or not os.path.exists("/etc/google_cloud"):
-        return real
-
     import ai_images
     needed = target_count - len(real)
     if not real:
