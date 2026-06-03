@@ -162,18 +162,18 @@ def to_prompt_block(photos: list[dict]) -> str:
     remaining = [i+1 for i in range(len(photos))
                  if i+1 != hero_idx and i+1 != (about_idx if len(photos) >= 2 else -1)]
     if remaining:
-        lines.append(f"  • SERVICES section: each service card MUST have a thumbnail/background image. "
-                     f"Use these for the service cards: {', '.join(f'Image {x}' for x in remaining)}. "
-                     f"If you have more service cards than remaining images, REUSE images.")
+        lines.append(f"  • SERVICES section: assign ONE UNIQUE image per service card. "
+                     f"Available for services: {', '.join(f'Image {x}' for x in remaining)}. "
+                     f"NEVER use the same image twice — if you have more cards than images, "
+                     f"use a CSS gradient background for the extra cards instead.")
     lines.append("  • DO NOT leave ANY section without visual interest. Sections with no provided image "
-                 "should use category-tinted gradient backgrounds.")
+                 "should use category-tinted gradient backgrounds (NOT broken image tags).")
     lines.append("  • Use <img loading='lazy' alt='...'> with object-fit:cover sized to fill its slot.")
     lines.append("  • Use the EXACT src URLs above. They are absolute (https://...) so they work in "
                  "downloaded HTML files too. Do NOT change them to relative paths.")
-    lines.append(f"  • THERE ARE EXACTLY {len(photos)} IMAGES. If you have more sections needing images "
-                 f"(e.g. 6 service cards but only {len(photos)} images), REUSE the URLs above. "
-                 f"NEVER invent _4, _5, or any other URL pattern beyond what's listed. "
-                 f"Hallucinated URLs cause broken images.")
+    lines.append(f"  • THERE ARE EXACTLY {len(photos)} IMAGES. Limit your service cards to {len(remaining)} "
+                 f"so each gets a unique photo. NEVER invent image URLs — any URL not listed above "
+                 f"will result in a broken image. If you need more visual elements, use CSS gradients.")
 
     attributions = sorted({p["attribution"] for p in photos if p["attribution"]})
     if attributions:

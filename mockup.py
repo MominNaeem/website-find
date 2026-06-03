@@ -133,7 +133,7 @@ def generate_html(lead: LeadInfo, place_id: str | None = None) -> str:
         try:
             # Real photos first; supplement with AI-generated if fewer than 4.
             business_photos = photos_mod.fetch_with_ai_fallback(
-                place_id, lead.category, target_count=4
+                place_id, lead.category, target_count=6
             )
         except Exception:
             business_photos = []
@@ -183,36 +183,42 @@ def generate_html(lead: LeadInfo, place_id: str | None = None) -> str:
     return html
 
 
-_MOCKUP_DIR = None
 def _save_public_mockup(place_id: str, html: str) -> str:
-    """Write the mockup to /static/mockups/<place_id>.html for public sharing."""
-    global _MOCKUP_DIR
-    if _MOCKUP_DIR is None:
-        from pathlib import Path
-        _MOCKUP_DIR = Path(__file__).parent / "static" / "mockups"
-        _MOCKUP_DIR.mkdir(parents=True, exist_ok=True)
+    """Upload mockup HTML to Supabase Storage for public sharing."""
+    from db import _sb
     safe = place_id.replace("/", "_").replace(":", "_")
-    path = _MOCKUP_DIR / f"{safe}.html"
-    path.write_text(html, encoding="utf-8")
-    return str(path)
+    filename = f"{safe}.html"
+    bucket = _sb().storage.from_("mockups")
+    try:
+        bucket.upload(filename, html.encode("utf-8"), {"content-type": "text/html"})
+    except Exception:
+        # File exists — update it
+        bucket.update(filename, html.encode("utf-8"), {"content-type": "text/html"})
+    return public_mockup_url(place_id)
 
 
 def public_mockup_url(place_id: str) -> str:
-    """The publicly accessible URL for a saved mockup (whether or not it exists)."""
-    base = os.environ.get("PUBLIC_BASE", "https://website-find.streamlit.app")
+    """The publicly accessible URL for a saved mockup."""
+    url = os.environ.get("SUPABASE_URL", "")
+    if not url:
+        try:
+            import streamlit as st
+            url = st.secrets.get("SUPABASE_URL", "")
+        except Exception:
+            pass
     safe = place_id.replace("/", "_").replace(":", "_")
-    return f"{base}/assets/mockups/{safe}.html"
+    return f"{url}/storage/v1/object/public/mockups/{safe}.html"
 
 
 def _replace_hallucinated_image_urls(html: str, valid: set[str]) -> str:
-    """Replace any /static/photos/ URL not in `valid` with a random valid one."""
+    """Replace any image URL not in `valid` with a CSS gradient placeholder."""
     if not valid:
         return html
-    valid_list = list(valid)
-    pattern = re.compile(r'https?://[^\s\)"\'<>]+/(?:static|assets)/photos/[^\s\)"\'<>]+')
+    # Match any https:// image URL that looks like a photo path (not data: URIs)
+    pattern = re.compile(r'https?://[^\s\)"\'<>]+\.(?:jpg|jpeg|png|webp)', re.IGNORECASE)
 
     def _sub(m):
         url = m.group(0)
-        return url if url in valid else random.choice(valid_list)
+        return url if url in valid else ""
 
     return pattern.sub(_sub, html)
