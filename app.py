@@ -31,6 +31,25 @@ from places import (CATEGORIES, estimate_cost, estimate_seconds, geocode,
 
 st.set_page_config(page_title="website_find", layout="wide", page_icon="🔎")
 
+# ---------------- public mockup viewer (no auth needed) ---------------- #
+_mockup_id = st.query_params.get("mockup")
+if _mockup_id:
+    db.init_db()
+    _row = db._sb().table("leads").select("mockup_html, name").eq(
+        "place_id", _mockup_id.replace("_", "/")
+    ).limit(1).execute()
+    if not _row.data:
+        # Try with original ID (might not need replacement)
+        _row = db._sb().table("leads").select("mockup_html, name").ilike(
+            "place_id", f"%{_mockup_id.split('_')[-1]}%"
+        ).limit(1).execute()
+    if _row.data and _row.data[0].get("mockup_html"):
+        st.components.v1.html(_row.data[0]["mockup_html"], height=900, scrolling=True)
+        st.caption(f"Mockup for {_row.data[0].get('name', 'business')} — built by Thrive Web Co")
+    else:
+        st.error("Mockup not found or not generated yet.")
+    st.stop()
+
 # ---------------- auth gate ---------------- #
 AUTH_CONFIG = Path(__file__).parent / "auth_config.yaml"
 _has_auth = AUTH_CONFIG.exists()

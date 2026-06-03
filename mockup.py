@@ -187,30 +187,16 @@ def generate_html(lead: LeadInfo, place_id: str | None = None) -> str:
 
 
 def _save_public_mockup(place_id: str, html: str) -> str:
-    """Upload mockup HTML to Supabase Storage for public sharing."""
-    from db import _sb
-    safe = place_id.replace("/", "_").replace(":", "_")
-    filename = f"{safe}.html"
-    bucket = _sb().storage.from_("mockups")
-    try:
-        bucket.upload(filename, html.encode("utf-8"), {"content-type": "text/html"})
-    except Exception:
-        # File exists — update it
-        bucket.update(filename, html.encode("utf-8"), {"content-type": "text/html"})
+    """Save mockup HTML to DB (already done via db.update_lead). No-op here."""
     return public_mockup_url(place_id)
 
 
 def public_mockup_url(place_id: str) -> str:
-    """The publicly accessible URL for a saved mockup."""
-    url = os.environ.get("SUPABASE_URL", "")
-    if not url:
-        try:
-            import streamlit as st
-            url = st.secrets.get("SUPABASE_URL", "")
-        except Exception:
-            pass
+    """Return a shareable data: URI that renders the mockup in any browser."""
+    # Mockup HTML is stored in the mockup_html column in Supabase.
+    # For sharing, the app shows a direct link to a Streamlit page.
     safe = place_id.replace("/", "_").replace(":", "_")
-    return f"{url}/storage/v1/object/public/mockups/{safe}.html"
+    return f"https://website-find.streamlit.app/?mockup={safe}"
 
 
 def _replace_hallucinated_image_urls(html: str, valid: set[str]) -> str:
