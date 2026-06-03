@@ -73,9 +73,9 @@ export function GuaranteeModal() {
                 {/* Close button */}
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="absolute top-4 right-4 size-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors z-10"
+                  className="absolute top-4 right-4 size-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-10 border border-white/20"
                 >
-                  <X className="size-5 text-gray-400" />
+                  <X className="size-5 text-white" />
                 </button>
 
                 {/* Header */}
