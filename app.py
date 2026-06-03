@@ -37,7 +37,10 @@ _has_auth = AUTH_CONFIG.exists()
 if not _has_auth:
     # Streamlit Cloud: try loading auth config from secrets
     try:
-        _cfg = dict(st.secrets["auth"])
+        import json as _json
+        # Deep-convert st.secrets (immutable) to plain dicts
+        _cfg = _json.loads(_json.dumps(dict(st.secrets["auth"]),
+                                        default=lambda o: dict(o) if hasattr(o, "items") else o))
         _has_auth = True
     except Exception:
         pass
