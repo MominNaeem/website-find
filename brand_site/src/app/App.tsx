@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SEOHead } from "./components/SEOHead";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { CustomCursor } from "./components/CustomCursor";
@@ -14,8 +14,7 @@ import { FeaturedIn } from "./components/FeaturedIn";
 import { ClientLogos } from "./components/ClientLogos";
 import { TrustBadges } from "./components/TrustBadges";
 import { Services } from "./components/Services";
-import { VideoSection } from "./components/VideoSection";
-import { BeforeAfterSlider } from "./components/BeforeAfterSlider";
+import { PortfolioShowcase } from "./components/PortfolioShowcase";
 import { ProcessTimeline } from "./components/ProcessTimeline";
 import { Stats } from "./components/Stats";
 import { ROICalculator } from "./components/ROICalculator";
@@ -72,8 +71,7 @@ export default function App() {
       <ClientLogos />
       <TrustBadges />
       <Services onBookCall={() => setIsBookingOpen(true)} />
-      <VideoSection />
-      <BeforeAfterSlider />
+      <PortfolioShowcase />
       <ProcessTimeline />
       <Stats />
       <ROICalculator />
