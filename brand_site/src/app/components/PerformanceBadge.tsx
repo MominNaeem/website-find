@@ -22,7 +22,7 @@ export function PerformanceBadge() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 2 }}
-      className="fixed bottom-8 right-24 z-[45] hidden xl:block"
+      className="fixed bottom-24 right-24 z-[45] hidden xl:block"
     >
       <motion.div
         whileHover={{ scale: 1.05, y: -2 }}

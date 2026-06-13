@@ -52,7 +52,7 @@ export default function App() {
       <StickyCTABar onBookCall={() => setIsBookingOpen(true)} />
       <FloatingCTA onBookCall={() => setIsBookingOpen(true)} />
       <PerformanceBadge />
-      <VisitorCounter />
+      {/* VisitorCounter removed — using real Google Analytics now */}
       <SocialProofNotifications />
       <ExitIntentPopup onBookCall={() => setIsBookingOpen(true)} />
       <NewsletterPopup />

@@ -20,7 +20,7 @@ export function WhatsAppWidget() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 2, type: "spring" }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-24 right-8 z-50 group"
+        className="fixed bottom-40 md:bottom-24 right-8 z-[60] hidden md:block group"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >

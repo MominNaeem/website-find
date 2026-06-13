@@ -31,7 +31,7 @@ export function FloatingCTA({ onBookCall }: FloatingCTAProps) {
         }}
         transition={{ type: "spring", stiffness: 260, damping: 20 }}
         onClick={onBookCall}
-        className="fixed bottom-8 right-8 z-50 group"
+        className="fixed bottom-24 md:bottom-8 right-8 z-[60] group"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >

@@ -34,7 +34,7 @@ export function LoadingScreen() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="w-64 h-16 mx-auto mb-8"
+              className="w-40 h-16 mx-auto mb-8"
             >
               <Logo />
             </motion.div>
