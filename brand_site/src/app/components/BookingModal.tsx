@@ -22,31 +22,45 @@ export function BookingModal({ isOpen, onClose, onSuccess }: BookingModalProps) 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const [error, setError] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError("");
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    setIsSubmitting(false);
-    setIsSuccess(true);
-
-    // Show toast and reset
-    setTimeout(() => {
-      setIsSuccess(false);
-      onClose();
-      onSuccess();
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        company: "",
-        message: "",
-        preferredDate: "",
-        preferredTime: "",
+    try {
+      const res = await fetch("/api/submit-audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
-    }, 1500);
+
+      if (!res.ok) {
+        throw new Error("Failed to submit");
+      }
+
+      setIsSubmitting(false);
+      setIsSuccess(true);
+
+      setTimeout(() => {
+        setIsSuccess(false);
+        onClose();
+        onSuccess();
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          message: "",
+          preferredDate: "",
+          preferredTime: "",
+        });
+      }, 1500);
+    } catch {
+      setIsSubmitting(false);
+      setError("Something went wrong. Please try again.");
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -342,6 +356,9 @@ export function BookingModal({ isOpen, onClose, onSuccess }: BookingModalProps) 
                   )}
                 </button>
 
+                {error && (
+                  <p className="text-sm text-red-400 text-center">{error}</p>
+                )}
                 <p className="text-xs text-gray-500 text-center">
                   By submitting, you agree to our terms and privacy policy.
                 </p>

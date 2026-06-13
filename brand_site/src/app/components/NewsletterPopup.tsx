@@ -26,8 +26,20 @@ export function NewsletterPopup() {
     };
   }, [isVisible]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Submit email to backend
+    try {
+      await fetch("/api/checklist-download", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+    } catch {
+      // Still allow download even if API fails
+    }
+
     setIsSubmitted(true);
 
     // Trigger PDF download
