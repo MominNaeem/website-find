@@ -1,5 +1,5 @@
 import { motion, useScroll, useMotionValueEvent } from "motion/react";
-import { ArrowUp, Phone } from "lucide-react";
+import { ArrowUp, MessageSquare } from "lucide-react";
 import { useState } from "react";
 
 interface FloatingCTAProps {
@@ -52,7 +52,7 @@ export function FloatingCTA({ onBookCall }: FloatingCTAProps) {
 
           {/* Button */}
           <div className="relative size-16 rounded-full bg-gradient-to-r from-[#C4E86B] to-[#D4F19C] flex items-center justify-center shadow-2xl">
-            <Phone className="size-6 text-black" />
+            <MessageSquare className="size-6 text-black" />
           </div>
 
           {/* Tooltip */}
@@ -61,7 +61,7 @@ export function FloatingCTA({ onBookCall }: FloatingCTAProps) {
             whileHover={{ opacity: 1, x: 0 }}
             className="absolute right-full mr-4 top-1/2 -translate-y-1/2 whitespace-nowrap px-4 py-2 bg-white text-black rounded-lg text-sm font-medium shadow-xl pointer-events-none"
           >
-            Book a Free Call
+            Get a Free Audit
             <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 rotate-45 size-2 bg-white" />
           </motion.div>
         </div>
@@ -76,7 +76,7 @@ export function FloatingCTA({ onBookCall }: FloatingCTAProps) {
         }}
         transition={{ type: "spring", stiffness: 260, damping: 20 }}
         onClick={scrollToTop}
-        className="fixed bottom-8 left-8 z-50 size-12 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+        className="fixed bottom-24 md:bottom-8 left-8 z-[60] size-12 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
