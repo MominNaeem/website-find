@@ -297,7 +297,13 @@ function SliderItem({ project, index }: { project: typeof projects[0]; index: nu
 
       {/* Before/After Slider */}
       <div
-        className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 cursor-col-resize select-none shadow-2xl shadow-black/50"
+        role="slider"
+        tabIndex={0}
+        aria-label={`Before and after comparison for ${project.name}`}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(sliderPosition)}
+        className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 cursor-col-resize select-none shadow-2xl shadow-black/50 focus:outline-none focus:ring-2 focus:ring-[#9B92C4] focus:ring-offset-2 focus:ring-offset-black"
         onMouseMove={handleMove}
         onTouchMove={handleMove}
         onMouseDown={() => setIsDragging(true)}
@@ -305,6 +311,10 @@ function SliderItem({ project, index }: { project: typeof projects[0]; index: nu
         onMouseLeave={() => setIsDragging(false)}
         onTouchStart={() => setIsDragging(true)}
         onTouchEnd={() => setIsDragging(false)}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") setSliderPosition((p) => Math.max(0, p - 5));
+          if (e.key === "ArrowRight") setSliderPosition((p) => Math.min(100, p + 5));
+        }}
       >
         {/* Before (full underlay) */}
         <BeforeMockup project={project} />

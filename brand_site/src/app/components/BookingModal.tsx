@@ -218,12 +218,13 @@ export function BookingModal({ isOpen, onClose, onSuccess }: BookingModalProps) 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Name */}
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                    <label htmlFor="booking-name" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
                       <User className="size-4" />
                       Full Name *
                     </label>
                     <input
                       type="text"
+                      id="booking-name"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
@@ -235,12 +236,13 @@ export function BookingModal({ isOpen, onClose, onSuccess }: BookingModalProps) 
 
                   {/* Email */}
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                    <label htmlFor="booking-email" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
                       <Mail className="size-4" />
                       Email *
                     </label>
                     <input
                       type="email"
+                      id="booking-email"
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
@@ -252,12 +254,13 @@ export function BookingModal({ isOpen, onClose, onSuccess }: BookingModalProps) 
 
                   {/* Phone */}
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                    <label htmlFor="booking-phone" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
                       <Phone className="size-4" />
                       Phone
                     </label>
                     <input
                       type="tel"
+                      id="booking-phone"
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
@@ -268,11 +271,12 @@ export function BookingModal({ isOpen, onClose, onSuccess }: BookingModalProps) 
 
                   {/* Company */}
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2">
+                    <label htmlFor="booking-company" className="block text-sm text-gray-400 mb-2">
                       Company
                     </label>
                     <input
                       type="text"
+                      id="booking-company"
                       name="company"
                       value={formData.company}
                       onChange={handleChange}
@@ -283,12 +287,13 @@ export function BookingModal({ isOpen, onClose, onSuccess }: BookingModalProps) 
 
                   {/* Preferred Date */}
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                    <label htmlFor="booking-date" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
                       <Calendar className="size-4" />
                       Preferred Date
                     </label>
                     <input
                       type="date"
+                      id="booking-date"
                       name="preferredDate"
                       value={formData.preferredDate}
                       onChange={handleChange}
@@ -299,11 +304,12 @@ export function BookingModal({ isOpen, onClose, onSuccess }: BookingModalProps) 
 
                   {/* Preferred Time */}
                   <div>
-                    <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                    <label htmlFor="booking-time" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
                       <Clock className="size-4" />
                       Preferred Time
                     </label>
                     <select
+                      id="booking-time"
                       name="preferredTime"
                       value={formData.preferredTime}
                       onChange={handleChange}
@@ -319,11 +325,12 @@ export function BookingModal({ isOpen, onClose, onSuccess }: BookingModalProps) 
 
                 {/* Message */}
                 <div>
-                  <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                  <label htmlFor="booking-message" className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
                     <MessageSquare className="size-4" />
                     Tell us about your project
                   </label>
                   <textarea
+                    id="booking-message"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}

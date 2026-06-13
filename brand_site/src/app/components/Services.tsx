@@ -46,8 +46,9 @@ function ServiceCard({ service, index, onBookCall }: { service: typeof services[
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <motion.div
+    <motion.button
       ref={ref}
+      type="button"
       initial={{ opacity: 0, y: 60 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
       transition={{
@@ -57,7 +58,8 @@ function ServiceCard({ service, index, onBookCall }: { service: typeof services[
       }}
       whileHover={{ y: -8, scale: 1.02 }}
       onClick={onBookCall}
-      className="group relative p-6 rounded-3xl bg-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-[#9B92C4]/30 transition-all duration-500 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-[#9B92C4]/10 cursor-pointer"
+      aria-label={`Learn more about ${service.title}`}
+      className="group relative p-6 rounded-3xl bg-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-[#9B92C4]/30 transition-all duration-500 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-[#9B92C4]/10 cursor-pointer text-left w-full"
       data-magnetic
     >
       {/* Hover glow effect */}
@@ -96,7 +98,7 @@ function ServiceCard({ service, index, onBookCall }: { service: typeof services[
 
       {/* Corner accent */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#9B92C4]/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl" />
-    </motion.div>
+    </motion.button>
   );
 }
 

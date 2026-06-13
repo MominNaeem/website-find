@@ -66,6 +66,7 @@ export function ROICalculator() {
                   step="1000"
                   value={monthlyTraffic}
                   onChange={(e) => setMonthlyTraffic(Number(e.target.value))}
+                  aria-label="Monthly website traffic"
                   className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer slider"
                   style={{
                     background: `linear-gradient(to right, #9B92C4 0%, #9B92C4 ${((monthlyTraffic - 1000) / 99000) * 100}%, rgba(255,255,255,0.1) ${((monthlyTraffic - 1000) / 99000) * 100}%, rgba(255,255,255,0.1) 100%)`
@@ -89,6 +90,7 @@ export function ROICalculator() {
                   step="0.5"
                   value={currentConversion}
                   onChange={(e) => setCurrentConversion(Number(e.target.value))}
+                  aria-label="Current conversion rate"
                   className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer"
                   style={{
                     background: `linear-gradient(to right, #9B92C4 0%, #9B92C4 ${((currentConversion - 0.5) / 9.5) * 100}%, rgba(255,255,255,0.1) ${((currentConversion - 0.5) / 9.5) * 100}%, rgba(255,255,255,0.1) 100%)`
@@ -112,6 +114,7 @@ export function ROICalculator() {
                   step="10"
                   value={averageValue}
                   onChange={(e) => setAverageValue(Number(e.target.value))}
+                  aria-label="Average order value"
                   className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer"
                   style={{
                     background: `linear-gradient(to right, #9B92C4 0%, #9B92C4 ${((averageValue - 10) / 990) * 100}%, rgba(255,255,255,0.1) ${((averageValue - 10) / 990) * 100}%, rgba(255,255,255,0.1) 100%)`
