@@ -25,7 +25,7 @@ export function StickyCTABar({ onBookCall }: StickyCTABarProps) {
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
       className="fixed bottom-0 left-0 right-0 z-[55] border-t border-white/10 bg-black/95 backdrop-blur-xl shadow-2xl"
     >
-      <div className="max-w-[1600px] mx-auto px-8 py-4">
+      <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Left side */}
           <div className="flex items-center gap-3">
